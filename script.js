@@ -550,9 +550,14 @@ function updateCartUI() {
 
     // Attach checkout and continue shopping listeners
     document.getElementById('checkoutBtn')?.addEventListener('click', () => {
-      showToast('🚀 Redirecting to checkout...');
-      setTimeout(() => closeCart(), 500);
-    });
+  showToast('🚀 Redirecting to checkout...');
+  
+  closeCart();
+
+  setTimeout(() => {
+    window.location.href = "checkout.html";
+  }, 500);
+});
 
     document.getElementById('continueShoppingBtn')?.addEventListener('click', closeCart);
   }
