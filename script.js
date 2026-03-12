@@ -11,7 +11,7 @@ const products = [
     id: 1,
     name: "Minecraft Diamond Sword",
     category: "gaming",
-    price: 1299,
+    price: 1499,
     rating: 5,
     ratingCount: 128,
     description: "3D printed replica, 60cm length. Iconic blue diamond finish.",
