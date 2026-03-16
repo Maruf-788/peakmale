@@ -651,38 +651,25 @@ function initCountdown() {
 }
 
 // ==================== NEWSLETTER ====================
-function initNewsletter() {
-  subscribeBtn.addEventListener('click', handleSubscribe);
-  emailInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') handleSubscribe();
+const newsletterForm = document.getElementById('newsletterForm');
+
+if (newsletterForm) {
+  newsletterForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    subscribeBtn.textContent = 'Sending...';
+
+    emailjs.sendForm('default_service', 'template_e7qh9ac', this)
+      .then(function() {
+        subscribeBtn.textContent = 'SUBSCRIBED ✓';
+        newsletterOk.hidden = false;
+        emailInput.value = '';
+      })
+      .catch(function(error) {
+        subscribeBtn.textContent = 'SUBSCRIBE';
+        alert('Error: ' + JSON.stringify(error));
+      });
   });
-}
-
-function handleSubscribe() {
-  const email = emailInput.value.trim();
-
-  if (!email || !isValidEmail(email)) {
-    emailInput.style.borderColor = '#ff4444';
-    emailInput.style.boxShadow = '0 0 15px rgba(255,68,68,0.3)';
-    showToast('⚠️ Please enter a valid email address');
-    setTimeout(() => {
-      emailInput.style.borderColor = '';
-      emailInput.style.boxShadow = '';
-    }, 2000);
-    return;
-  }
-
-  // Success
-  emailInput.value = '';
-  newsletterOk.hidden = false;
-  subscribeBtn.textContent = 'SUBSCRIBED ✓';
-  subscribeBtn.disabled = true;
-  subscribeBtn.style.opacity = '0.7';
-  showToast('🎮 Welcome to the squad! Check your inbox.');
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 // ==================== SMOOTH ANCHOR SCROLL ====================

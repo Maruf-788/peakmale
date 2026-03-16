@@ -279,9 +279,12 @@
         <div class="about-text reveal">
           <div class="about-eyebrow">OUR STORY</div>
           <h2 class="about-title" id="aboutHeading">WE ARE <span>PEAKMALE</span></h2>
-          <p>An Indian brand born from gaming culture and a deep love for hobby collecting. We started because we couldn't find quality gaming props and RC models at fair prices in India.</p>
-          <p>Every product we sell is carefully sourced or <strong>3D printed right here in India</strong> — built with the same obsession that drives every gamer and collector.</p>
-          <p>From Minecraft replicas to die-cast Lamborghinis, we bring the boldest hobby gear directly to your door. No middlemen. No compromises.</p>
+          <p>An Indian brand built for the ones who are always ahead of the curve.</p>
+          <p>We started with a simple frustration — <strong> finding cool tech, gadgets, and gear in India </strong> meant either overpaying, waiting forever, or settling for less.</p>
+          <p>So we built the store we always wished existed.</p>
+          <p>From the <strong>latest tech accessories to gadgets </strong>  that actually make life better, every product we carry is handpicked for people who care about quality, design, and value. We cut through the clutter so you don't have to.</p>
+          <p>Whether you're a gamer, a tech enthusiast, or just someone who loves owning things that work and look good — this is your place.</p>
+          <p>Smart picks. Fair prices. Delivered to your door.</p>
           <a href="#shop" class="btn btn-primary">Shop Now →</a>
         </div>
         <div class="about-stats reveal">
@@ -311,25 +314,55 @@
   </section>
 
   <!-- ===================== NEWSLETTER ===================== -->
-  <section class="newsletter" id="contact" aria-labelledby="newsletterHeading">
-    <div class="newsletter-bg" aria-hidden="true"></div>
-    <div class="container newsletter-inner">
-      <div class="newsletter-content">
-        <div class="newsletter-icon" aria-hidden="true">⚡</div>
-        <h2 id="newsletterHeading">JOIN THE <span>INNER CIRCLE</span></h2>
-        <p>Join 2,000+ gamers. Get drops, deals &amp; new arrivals first.</p>
-        <div class="newsletter-form" role="form" aria-label="Newsletter signup">
-          <input type="email" id="emailInput" placeholder="your@email.com" aria-label="Email address" autocomplete="email" />
-          <button class="btn btn-primary" id="subscribeBtn" aria-label="Subscribe to newsletter">SUBSCRIBE</button>
-        </div>
-        <p class="newsletter-fine">No spam. Unsubscribe anytime. 🎮</p>
-        <div class="newsletter-success" id="newsletterSuccess" role="alert" aria-live="polite" hidden>
-          ✅ You're in! Welcome to the squad.
-        </div>
-      </div>
-    </div>
-  </section>
+ <section class="newsletter" id="contact">
 
+<div class="newsletter-bg"></div>
+
+<div class="container newsletter-inner">
+<div class="newsletter-content">
+
+<div class="newsletter-icon">⚡</div>
+
+<h2>JOIN THE <span>INNER CIRCLE</span></h2>
+
+<p>Join 2,000+ gamers. Get drops, deals & new arrivals first.</p>
+
+<div class="newsletter-form">
+
+<form id="newsletterForm">
+
+<input
+type="email"
+name="email"
+id="emailInput"
+class="newsletter-input"
+placeholder="your@email.com"
+required
+>
+
+<button
+class="btn btn-primary"
+id="subscribeBtn"
+type="submit">
+SUBSCRIBE
+</button>
+
+</form>
+
+</div>
+
+<p class="newsletter-fine">
+No spam. Unsubscribe anytime. 🎮
+</p>
+
+<div class="newsletter-success" id="newsletterSuccess" hidden>
+✅ You're in! Welcome to the squad.
+</div>
+
+</div>
+</div>
+
+</section>
   <!-- ===================== FOOTER ===================== -->
   <footer class="footer" role="contentinfo">
     <div class="footer-top">
@@ -407,7 +440,12 @@
 
   <!-- ===================== TOAST ===================== -->
   <div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+<script>
+emailjs.init("0Bait5beHSMbkPHuQ");
+</script>
   <script src="script.js"></script>
+  
 </body>
 </html>
