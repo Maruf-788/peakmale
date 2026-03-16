@@ -73,50 +73,17 @@ const products = [
     image: "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&q=80",
     badge: "⚔️ Gaming"
   },
-  {
-    id: 7,
-    name: "Lamborghini Huracán Die-Cast",
-    category: "cars",
-    price: 1899,
-    rating: 5,
-    ratingCount: 47,
-    description: "1:24 scale die-cast model. Opening doors, detailed engine bay.",
-    image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=500&q=80",
-    badge: "🏎️ Cars"
-  },
-  {
-    id: 8,
-    name: "RC Drift Car Beginner Kit",
-    category: "cars",
-    price: 3499,
-    rating: 5,
-    ratingCount: 61,
-    description: "2.4GHz radio, 1:16 scale. Drift tyres included. 30min battery life.",
-    image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=500&q=80",
-    badge: "🏎️ Cars"
-  },
-  {
-    id: 9,
-    name: "Formula 1 Mercedes W14 Model",
-    category: "cars",
-    price: 1199,
+    {
+    id: 6,
+    name: "Demo",
+    category: "tech",
+    price: 449,
     rating: 4,
-    ratingCount: 38,
-    description: "1:43 scale F1 model. Authentic livery, metal chassis.",
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&q=80",
-    badge: "🏎️ Cars"
+    ratingCount: 163,
+    description: "Acrylic wall mount. Fits PS, Xbox & Nintendo controllers.",
+    image: "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&q=80",
+    badge: "⚔️ Gaming"
   },
-  {
-    id: 10,
-    name: "Bugatti Chiron Die-Cast",
-    category: "cars",
-    price: 2799,
-    rating: 5,
-    ratingCount: 29,
-    description: "1:18 scale full metal die-cast. Display stand included.",
-    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&q=80",
-    badge: "🏎️ Cars"
-  }
 ];
 
 // ==================== CART STATE ====================
