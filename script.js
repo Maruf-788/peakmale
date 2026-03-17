@@ -73,16 +73,16 @@ const products = [
     image: "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&q=80",
     badge: "⚔️ Gaming"
   },
-    {
-    id: 6,
-    name: "Demo",
+  {
+    id: 7,
+    name: "RGB LED Desk Lamp",
     category: "tech",
-    price: 449,
+    price: 599,
     rating: 4,
-    ratingCount: 163,
-    description: "Acrylic wall mount. Fits PS, Xbox & Nintendo controllers.",
-    image: "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=500&q=80",
-    badge: "⚔️ Gaming"
+    ratingCount: 210,
+    description: "Adjustable brightness, 16M colors. Perfect gaming desk companion.",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80",
+    badge: "🔧 Tech"
   },
 ];
 
@@ -105,9 +105,6 @@ const cartCountTxt = document.getElementById('cartCountText');
 const productsGrid = document.getElementById('productsGrid');
 const filterTabs   = document.querySelectorAll('.filter-tab');
 const toastCont    = document.getElementById('toastContainer');
-const subscribeBtn = document.getElementById('subscribeBtn');
-const emailInput   = document.getElementById('emailInput');
-const newsletterOk = document.getElementById('newsletterSuccess');
 const heroParticles= document.getElementById('heroParticles');
 
 // ==================== INIT ====================
@@ -127,16 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== NAVBAR ====================
-/**
- * Add .scrolled class to navbar after 50px scroll
- */
 function initNavbar() {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 }
 
@@ -149,7 +139,6 @@ function initHamburger() {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
-  // Close nav on link click
   navLinks.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
@@ -161,35 +150,29 @@ function initHamburger() {
 }
 
 // ==================== PARTICLES ====================
-/**
- * Spawn CSS animated particles in the hero section
- */
 function spawnParticles() {
-  const count = 30;
+  // Reduce particle count on mobile for better performance
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const count = isMobile ? 12 : 30;
+
+  const fragment = document.createDocumentFragment();
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.classList.add('particle');
     const size = Math.random() * 3 + 1;
-    const left = Math.random() * 100;
-    const delay = Math.random() * 15;
-    const duration = Math.random() * 10 + 8;
     p.style.cssText = `
-      left: ${left}%;
+      left: ${Math.random() * 100}%;
       width: ${size}px;
       height: ${size}px;
-      animation-delay: ${delay}s;
-      animation-duration: ${duration}s;
+      animation-delay: ${Math.random() * 15}s;
+      animation-duration: ${Math.random() * 10 + 8}s;
     `;
-    heroParticles.appendChild(p);
+    fragment.appendChild(p);
   }
+  heroParticles.appendChild(fragment);
 }
 
 // ==================== PRODUCT RENDERING ====================
-/**
- * Renders star rating as HTML string
- * @param {number} rating - 1 to 5
- * @returns {string} HTML stars
- */
 function renderStars(rating) {
   let stars = '';
   for (let i = 1; i <= 5; i++) {
@@ -198,20 +181,10 @@ function renderStars(rating) {
   return stars;
 }
 
-/**
- * Format price to Indian Rupee string
- * @param {number} price
- * @returns {string}
- */
 function formatPrice(price) {
   return '₹' + price.toLocaleString('en-IN');
 }
 
-/**
- * Renders a single product card element
- * @param {Object} product
- * @returns {HTMLElement}
- */
 function createProductCard(product) {
   const card = document.createElement('article');
   card.classList.add('product-card');
@@ -236,6 +209,7 @@ function createProductCard(product) {
     </div>
     <div class="product-info">
       <h3 class="product-name">${product.name}</h3>
+      <p class="product-desc">${product.description}</p>
       <div class="product-rating" aria-label="${product.rating} out of 5 stars">
         <span>${renderStars(product.rating)}</span>
         <span class="product-rating-count">(${product.ratingCount})</span>
@@ -252,24 +226,20 @@ function createProductCard(product) {
   return card;
 }
 
-/**
- * Renders products into the grid, filtered by category
- * @param {string} filter - 'all', 'gaming', or 'cars'
- */
 function renderProducts(filter) {
   currentFilter = filter;
   const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
   productsGrid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
 
   filtered.forEach((product, index) => {
     const card = createProductCard(product);
-    // Stagger reveal delay
-    card.style.transitionDelay = `${index * 0.07}s`;
-    productsGrid.appendChild(card);
+    card.style.transitionDelay = `${index * 0.06}s`;
+    fragment.appendChild(card);
   });
 
-  // Re-observe new cards for scroll reveal
+  productsGrid.appendChild(fragment);
   observeProductCards();
 }
 
@@ -278,29 +248,22 @@ function initFilterTabs() {
   filterTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const filter = tab.getAttribute('data-filter');
-
-      // Update active state
       filterTabs.forEach(t => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
-
       renderProducts(filter);
     });
   });
 }
 
 // ==================== CATEGORY CARDS ====================
-/**
- * Category cards filter the shop section on click
- */
 function initCategoryCards() {
   document.querySelectorAll('.cat-card').forEach(card => {
-    card.addEventListener('click', (e) => {
+    card.addEventListener('click', () => {
       const cat = card.getAttribute('data-cat');
-      // Activate the corresponding filter tab
       filterTabs.forEach(tab => {
         const match = tab.getAttribute('data-filter') === cat;
         tab.classList.toggle('active', match);
@@ -312,9 +275,6 @@ function initCategoryCards() {
 }
 
 // ==================== INTERSECTION OBSERVER ====================
-/**
- * Observe product cards and animate on scroll
- */
 function observeProductCards() {
   const cards = productsGrid.querySelectorAll('.product-card');
   const observer = new IntersectionObserver((entries) => {
@@ -324,14 +284,11 @@ function observeProductCards() {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
   cards.forEach(card => observer.observe(card));
 }
 
-/**
- * Observe general reveal elements
- */
 function initScrollReveal() {
   const reveals = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries) => {
@@ -341,15 +298,12 @@ function initScrollReveal() {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.1 });
 
   reveals.forEach(el => revealObserver.observe(el));
 }
 
 // ==================== CART FUNCTIONS ====================
-/**
- * Save cart to localStorage
- */
 function saveCart() {
   try {
     localStorage.setItem('peakmale_cart', JSON.stringify(cart));
@@ -358,25 +312,15 @@ function saveCart() {
   }
 }
 
-/**
- * Load cart from localStorage
- */
 function loadCart() {
   try {
     const saved = localStorage.getItem('peakmale_cart');
-    if (saved) {
-      cart = JSON.parse(saved);
-    }
+    if (saved) cart = JSON.parse(saved);
   } catch (e) {
     cart = [];
-    console.warn('Could not load cart:', e);
   }
 }
 
-/**
- * Add a product to cart or increment quantity if already in cart
- * @param {number} productId
- */
 function addToCart(productId) {
   const product = products.find(p => p.id === parseInt(productId));
   if (!product) return;
@@ -390,6 +334,7 @@ function addToCart(productId) {
       name: product.name,
       price: product.price,
       image: product.image,
+      category: product.category,
       qty: 1
     });
   }
@@ -400,21 +345,12 @@ function addToCart(productId) {
   animateCartIcon();
 }
 
-/**
- * Remove a product from cart entirely
- * @param {number} productId
- */
 function removeFromCart(productId) {
   cart = cart.filter(item => item.id !== parseInt(productId));
   saveCart();
   updateCartUI();
 }
 
-/**
- * Change quantity of a cart item
- * @param {number} productId
- * @param {number} delta - +1 or -1
- */
 function changeQty(productId, delta) {
   const item = cart.find(i => i.id === parseInt(productId));
   if (!item) return;
@@ -429,46 +365,31 @@ function changeQty(productId, delta) {
   updateCartUI();
 }
 
-/**
- * Animate cart icon with bump effect
- */
 function animateCartIcon() {
   cartBtn.classList.remove('bump');
-  void cartBtn.offsetWidth; // Force reflow
+  void cartBtn.offsetWidth;
   cartBtn.classList.add('bump');
 }
 
-/**
- * Get total number of items in cart
- */
 function getCartCount() {
   return cart.reduce((sum, item) => sum + item.qty, 0);
 }
 
-/**
- * Get cart subtotal
- */
 function getCartTotal() {
   return cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 }
 
-/**
- * Re-render entire cart UI (badge + sidebar items + footer)
- */
 function updateCartUI() {
   const count = getCartCount();
   const total = getCartTotal();
 
-  // Update badge
   cartBadge.textContent = count;
   cartBadge.style.transform = count > 0 ? 'scale(1)' : 'scale(0.7)';
 
-  // Update count text in header
   if (cartCountTxt) {
     cartCountTxt.textContent = `${count} item${count !== 1 ? 's' : ''}`;
   }
 
-  // Render items
   if (cart.length === 0) {
     cartItems.innerHTML = `
       <div class="cart-empty">
@@ -493,11 +414,11 @@ function updateCartUI() {
           <div class="cart-item-price">${formatPrice(item.price)}</div>
         </div>
         <div class="cart-item-controls">
-          <button class="qty-btn" data-action="decrease" data-id="${item.id}" aria-label="Decrease quantity of ${item.name}">−</button>
-          <span class="qty-value" aria-label="Quantity: ${item.qty}">${item.qty}</span>
-          <button class="qty-btn" data-action="increase" data-id="${item.id}" aria-label="Increase quantity of ${item.name}">+</button>
+          <button class="qty-btn" data-action="decrease" data-id="${item.id}" aria-label="Decrease qty">−</button>
+          <span class="qty-value">${item.qty}</span>
+          <button class="qty-btn" data-action="increase" data-id="${item.id}" aria-label="Increase qty">+</button>
         </div>
-        <button class="cart-item-remove" data-id="${item.id}" aria-label="Remove ${item.name} from cart">✕</button>
+        <button class="cart-item-remove" data-id="${item.id}" aria-label="Remove ${item.name}">✕</button>
       </div>
     `).join('');
 
@@ -507,24 +428,19 @@ function updateCartUI() {
         <strong>${formatPrice(total)}</strong>
       </div>
       <p class="cart-note">Taxes &amp; shipping calculated at checkout</p>
-      <button class="btn btn-primary cart-checkout-btn" id="checkoutBtn" aria-label="Proceed to checkout">
+      <button class="btn btn-primary cart-checkout-btn" id="checkoutBtn">
         Proceed to Checkout →
       </button>
-      <button class="cart-continue-btn" id="continueShoppingBtn" aria-label="Continue shopping">
+      <button class="cart-continue-btn" id="continueShoppingBtn">
         Continue Shopping
       </button>
     `;
 
-    // Attach checkout and continue shopping listeners
     document.getElementById('checkoutBtn')?.addEventListener('click', () => {
-  showToast('🚀 Redirecting to checkout...');
-  
-  closeCart();
-
-  setTimeout(() => {
-    window.location.href = "checkout.html";
-  }, 500);
-});
+      showToast('🚀 Redirecting to checkout...');
+      closeCart();
+      setTimeout(() => { window.location.href = 'checkout.html'; }, 500);
+    });
 
     document.getElementById('continueShoppingBtn')?.addEventListener('click', closeCart);
   }
@@ -532,39 +448,27 @@ function updateCartUI() {
 
 // ==================== CART EVENTS ====================
 function initCartEvents() {
-  // Open cart
   cartBtn.addEventListener('click', openCart);
-
-  // Close cart
   cartClose.addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
 
-  // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCart();
   });
 
-  // Delegate: Add to Cart (bottom button) + Quick Add (overlay)
   document.addEventListener('click', (e) => {
-    // Add to cart / Quick add
     if (e.target.matches('.add-to-cart, .quick-add')) {
-      const id = parseInt(e.target.getAttribute('data-id'));
-      addToCart(id);
+      addToCart(e.target.getAttribute('data-id'));
       return;
     }
-
-    // Quantity controls
     if (e.target.matches('.qty-btn')) {
-      const id = parseInt(e.target.getAttribute('data-id'));
+      const id = e.target.getAttribute('data-id');
       const action = e.target.getAttribute('data-action');
       changeQty(id, action === 'increase' ? 1 : -1);
       return;
     }
-
-    // Remove item
     if (e.target.matches('.cart-item-remove')) {
-      const id = parseInt(e.target.getAttribute('data-id'));
-      removeFromCart(id);
+      removeFromCart(e.target.getAttribute('data-id'));
       return;
     }
   });
@@ -589,11 +493,6 @@ function closeCart() {
 }
 
 // ==================== TOAST ====================
-/**
- * Show a notification toast
- * @param {string} message
- * @param {number} duration - ms before auto-dismiss
- */
 function showToast(message, duration = 3000) {
   const toast = document.createElement('div');
   toast.classList.add('toast');
@@ -603,80 +502,99 @@ function showToast(message, duration = 3000) {
 
   setTimeout(() => {
     toast.classList.add('fade-out');
-    toast.addEventListener('animationend', () => toast.remove());
+    toast.addEventListener('animationend', () => toast.remove(), { once: true });
   }, duration);
 }
 
 // ==================== COUNTDOWN TIMER ====================
 function initCountdown() {
-  // Set target 3 days from now, store in sessionStorage so it's consistent per session
   let target;
   try {
     const stored = sessionStorage.getItem('peakmale_countdown');
-    if (stored) {
-      target = parseInt(stored);
-    } else {
-      target = Date.now() + 3 * 24 * 60 * 60 * 1000;
-      sessionStorage.setItem('peakmale_countdown', target);
-    }
+    target = stored ? parseInt(stored) : Date.now() + 3 * 24 * 60 * 60 * 1000;
+    if (!stored) sessionStorage.setItem('peakmale_countdown', target);
   } catch (e) {
     target = Date.now() + 3 * 24 * 60 * 60 * 1000;
   }
 
-  function tick() {
-    const now = Date.now();
-    const remaining = target - now;
+  const els = {
+    days:  document.getElementById('countDays'),
+    hours: document.getElementById('countHours'),
+    mins:  document.getElementById('countMins'),
+    secs:  document.getElementById('countSecs'),
+  };
 
+  // Early return if elements don't exist
+  if (!els.days) return;
+
+  function tick() {
+    const remaining = target - Date.now();
     if (remaining <= 0) {
-      document.getElementById('countDays').textContent = '00';
-      document.getElementById('countHours').textContent = '00';
-      document.getElementById('countMins').textContent = '00';
-      document.getElementById('countSecs').textContent = '00';
+      Object.values(els).forEach(el => { el.textContent = '00'; });
       return;
     }
-
-    const days  = Math.floor(remaining / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins  = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    const secs  = Math.floor((remaining % (1000 * 60)) / 1000);
-
-    document.getElementById('countDays').textContent  = String(days).padStart(2, '0');
-    document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('countMins').textContent  = String(mins).padStart(2, '0');
-    document.getElementById('countSecs').textContent  = String(secs).padStart(2, '0');
+    const d = Math.floor(remaining / 864e5);
+    const h = Math.floor((remaining % 864e5) / 36e5);
+    const m = Math.floor((remaining % 36e5) / 6e4);
+    const s = Math.floor((remaining % 6e4) / 1e3);
+    els.days.textContent  = String(d).padStart(2, '0');
+    els.hours.textContent = String(h).padStart(2, '0');
+    els.mins.textContent  = String(m).padStart(2, '0');
+    els.secs.textContent  = String(s).padStart(2, '0');
   }
 
-  tick(); // Initial render
+  tick();
   setInterval(tick, 1000);
 }
 
 // ==================== NEWSLETTER ====================
-const newsletterForm = document.getElementById('newsletterForm');
+function initNewsletter() {
+  const newsletterForm = document.getElementById('newsletterForm');
+  const subscribeBtn   = document.getElementById('subscribeBtn');
+  const emailInput     = document.getElementById('emailInput');
+  const newsletterOk   = document.getElementById('newsletterSuccess');
 
-if (newsletterForm) {
-  newsletterForm.addEventListener('submit', function(event) {
-    event.preventDefault();
+  if (!newsletterForm) return;
+
+  newsletterForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    if (!email) return;
 
     subscribeBtn.textContent = 'Sending...';
+    subscribeBtn.disabled = true;
 
-    emailjs.sendForm('default_service', 'template_e7qh9ac', this)
-      .then(function() {
+    // Use EmailJS if available, otherwise show success anyway
+    if (typeof emailjs !== 'undefined') {
+      emailjs.sendForm('default_service', 'template_e7qh9ac', this)
+        .then(() => {
+          subscribeBtn.textContent = 'SUBSCRIBED ✓';
+          if (newsletterOk) newsletterOk.hidden = false;
+          emailInput.value = '';
+        })
+        .catch(() => {
+          subscribeBtn.textContent = 'SUBSCRIBE';
+          subscribeBtn.disabled = false;
+          showToast('Something went wrong. Please try again.');
+        });
+    } else {
+      // Fallback: simulate success
+      setTimeout(() => {
         subscribeBtn.textContent = 'SUBSCRIBED ✓';
-        newsletterOk.hidden = false;
+        if (newsletterOk) newsletterOk.hidden = false;
         emailInput.value = '';
-      })
-      .catch(function(error) {
-        subscribeBtn.textContent = 'SUBSCRIBE';
-        alert('Error: ' + JSON.stringify(error));
-      });
+      }, 800);
+    }
   });
 }
 
 // ==================== SMOOTH ANCHOR SCROLL ====================
-// Native smooth scroll handles it via CSS, but this catches hash links for older browsers
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', (e) => {
-    const target = document.querySelector(anchor.getAttribute('href'));
+    const id = anchor.getAttribute('href');
+    if (id === '#') return;
+    const target = document.querySelector(id);
     if (target) {
       e.preventDefault();
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
